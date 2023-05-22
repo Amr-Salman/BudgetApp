@@ -4,7 +4,7 @@ const Expense = require('../models/expenseModel');
 const { createBudgetValidation } = require('../utils/validation');
 
 // @Desc    Get all the budgets
-// @route   GET api/budget
+// @route   GET api/v1/budget
 // @Access  Private
 const getAllBudgets = asyncHandler(async (req, res) => {
   const budgets = await Budget.find({ user: req.user._id });
@@ -13,7 +13,7 @@ const getAllBudgets = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Get specific the budgets
-// @route   GET api/budget/:id
+// @route   GET api/v1/budget/:id
 // @Access  Private
 const getBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -33,7 +33,7 @@ const getBudget = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Create a new budget
-// @route   POST api/budget
+// @route   POST api/v1/budget
 // @Access  Private
 const createBudget = asyncHandler(async (req, res) => {
   const { title, amount, color } = req.body;
@@ -61,7 +61,7 @@ const createBudget = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Update a budget
-// @route   PATCH api/budget/:id
+// @route   PATCH api/v1/budget/:id
 // @Access  Private
 const updateBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -88,7 +88,7 @@ const updateBudget = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Delete a budget
-// @route   DELETE api/budget/:id
+// @route   DELETE api/v1/budget/:id
 // @Access  Private
 const deleteBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;

@@ -7,7 +7,7 @@ const {
 } = require('../utils/validation');
 
 // @Desc    Get all expenses
-// @route   GET api/expense/
+// @route   GET api/v1/expense/
 // @Access  Private
 const getAllExpenses = asyncHandler(async (req, res) => {
   const expenses = await Expense.find({ user: req.user._id }).populate(
@@ -17,7 +17,7 @@ const getAllExpenses = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Create a new expense
-// @route   POST api/expense
+// @route   POST api/v1/expense
 // @Access  Private
 const createExpense = asyncHandler(async (req, res) => {
   const { budget, title, amount } = req.body;
@@ -61,7 +61,7 @@ const createExpense = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Update specific expense
-// @route   PATCH api/expense/:id
+// @route   PATCH api/v1/expense/:id
 // @Access  Private
 const updateExpense = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -93,7 +93,7 @@ const updateExpense = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Delete specific expense
-// @route   DELETE api/expense/:id
+// @route   DELETE api/v1/expense/:id
 // @Access  Private
 const deleteExpense = asyncHandler(async (req, res) => {
   const { id } = req.params;

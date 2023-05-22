@@ -4,7 +4,7 @@ const { registerValidation, loginValidation } = require('../utils/validation');
 const generateToken = require('../utils/generateToken');
 
 // @Desc    Register a user
-// @route   POST api/user/register
+// @route   POST api/v1/user/register
 // @Access  Public
 const register = asyncHandler(async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
@@ -53,7 +53,7 @@ const register = asyncHandler(async (req, res) => {
 });
 
 // @Desc    Login a user
-// @route   POST api/user/login
+// @route   POST api/v1/user/login
 // @Access  Public
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -88,7 +88,16 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Logout a user
+// @route POST /api/v1/user/logout
+// @access Public
+const logout = asyncHandler(async (req, res) => {
+  res.cookie('jwt', '', { httpOnly: true, expires: new Date(0) });
+  res.status(200).json({ message: 'User logged out.' });
+});
+
 module.exports = {
   register,
   login,
+  logout,
 };
