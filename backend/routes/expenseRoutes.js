@@ -4,7 +4,6 @@ const expenseController = require('../controllers/expenseController');
 
 router.get('/', expenseController.getAllExpenses);
 router.post('/', expenseController.createExpense);
-router.get('/:budgetID', expenseController.getAllBudgetExpenses);
 router.delete('/:id', expenseController.deleteExpense);
 router.patch('/:id', expenseController.updateExpense);
 

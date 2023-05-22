@@ -9,7 +9,7 @@ const { createBudgetValidation } = require('../utils/validation');
 const getAllBudgets = asyncHandler(async (req, res) => {
   const budgets = await Budget.find({ user: req.user._id });
   res.status(200);
-  res.json({ payload: budgets, message: '' });
+  res.json({ payload: budgets, message: 'All budgets got successfully.' });
 });
 
 // @Desc    Get specific the budgets
@@ -22,7 +22,10 @@ const getBudget = asyncHandler(async (req, res) => {
   if (budget && budget.user.toString() === req.user._id.toString()) {
     const expenses = await Expense.find({ budget: budget._id });
     res.status(200);
-    res.json({ payload: { budget, expenses }, message: '' });
+    res.json({
+      payload: { budget, expenses },
+      message: `${budget.title} git successfully.`,
+    });
   } else {
     res.status(404);
     res.json({ message: `Budget with id: ${id} does not exist.` });

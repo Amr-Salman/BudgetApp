@@ -13,19 +13,7 @@ const getAllExpenses = asyncHandler(async (req, res) => {
   const expenses = await Expense.find({ user: req.user._id }).populate(
     'budget'
   );
-  res.json({ payload: expenses, message: '' });
-});
-
-// @Desc    Get all expenses
-// @route   GET api/expense/
-// @Access  Private
-const getAllBudgetExpenses = asyncHandler(async (req, res) => {
-  const { budgetID } = req.params;
-  const expenses = await Expense.find({
-    user: req.user._id,
-    budget: budgetID,
-  }).populate('budget');
-  res.json({ payload: expenses, message: '' });
+  res.json({ payload: expenses, message: 'All expenses got successfully.' });
 });
 
 // @Desc    Create a new expense
@@ -134,7 +122,6 @@ const deleteExpense = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllExpenses,
-  getAllBudgetExpenses,
   createExpense,
   deleteExpense,
   updateExpense,
