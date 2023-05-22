@@ -1,1 +1,2 @@
-# MERN-stack---Budget-App
+# BudgetApp
+This is a full stack MERN Application to practice 
