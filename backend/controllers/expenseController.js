@@ -23,7 +23,7 @@ const createExpense = asyncHandler(async (req, res) => {
   const { budget, title, amount } = req.body;
 
   // Validate the fields
-  const { error, errorsMessages } = createExpenseValidation({
+  const { error, message } = createExpenseValidation({
     budget,
     title,
     amount,
@@ -32,7 +32,7 @@ const createExpense = asyncHandler(async (req, res) => {
   // Validate the fields
   if (error) {
     res.status(400);
-    throw { message: errorsMessages };
+    throw new Error(message);
   }
 
   // Check if the budget exists and the user is the owner
@@ -86,9 +86,7 @@ const updateExpense = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    res.json({
-      message: `Expense with ID: ${id} doesn't exist.`,
-    });
+    throw new Error(`Expense with ID: ${id} doesn't exist.`);
   }
 });
 
@@ -100,6 +98,7 @@ const deleteExpense = asyncHandler(async (req, res) => {
 
   // Validate the ID
   if (!validateMongodbID(id)) {
+    res.status(400);
     throw new Error('Please enter a valid expense ID.');
   }
   const expense = await Expense.findById(id);
@@ -114,9 +113,7 @@ const deleteExpense = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    res.json({
-      message: `Expense with ID: ${id} doesn't exist.`,
-    });
+    throw new Error(`Expense with ID: ${id} doesn't exist.`);
   }
 });
 

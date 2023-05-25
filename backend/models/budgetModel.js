@@ -15,10 +15,6 @@ const budgetSchema = mongoose.Schema(
       type: Number,
       required: [true, 'Please add a budget amount.'],
     },
-    color: {
-      type: String,
-      required: [true, 'Please add a color.'],
-    },
   },
   { timestamps: true }
 );

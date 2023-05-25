@@ -14,24 +14,29 @@ const app = express();
 
 // Listening to requests
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is up and listening on port: ${PORT}!!`);
-  mongoose
-    .connect(process.env.MONGO_URI)
-    .then((res) => {
-      console.log('Connected to DB');
-    })
-    .catch((err) => {
-      console.log(err);
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then((res) => {
+    // listenning to the server after mongoose connect
+    app.listen(PORT, () => {
+      console.log(`Server is up and listening on port: ${PORT}!!`);
     });
-});
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 /* Middlewares */
 
 // Accepting data in the req.body
-app.use(cors());
-app.use(express.json()); // For parsing json
+app.use(
+  cors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+  })
+);
 app.use(cookieParser()); // For parsing cookies
+app.use(express.json()); // For parsing json
 app.use(express.urlencoded({ extended: false })); // For parsing html forms data
 
 /* Routes */

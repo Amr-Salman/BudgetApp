@@ -10,7 +10,7 @@ const register = asyncHandler(async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
   // Validate fields
-  const { error, errorsMessages } = registerValidation({
+  const { error, message } = registerValidation({
     username,
     email,
     password,
@@ -18,12 +18,7 @@ const register = asyncHandler(async (req, res) => {
   });
   if (error) {
     res.status(401);
-    throw { message: errorsMessages };
-  }
-
-  // Confirm that passwords matches
-  if (password !== confirmPassword) {
-    throw new Error('Passwords does not match!');
+    throw new Error(message);
   }
 
   // Check if user exists
@@ -59,10 +54,10 @@ const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // Validate the fields
-  const { error, errorsMessages } = loginValidation({ email, password });
+  const { error, message } = loginValidation({ email, password });
   if (error) {
     res.status(400);
-    throw { message: errorsMessages };
+    throw new Error(message);
   }
 
   // Get the user from DB

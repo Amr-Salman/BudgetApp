@@ -1,7 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const Budget = require('../models/budgetModel');
 const Expense = require('../models/expenseModel');
-const { createBudgetValidation } = require('../utils/validation');
+const {
+  createBudgetValidation,
+  validateMongodbID,
+} = require('../utils/validation');
 
 // @Desc    Get all the budgets
 // @route   GET api/v1/budget
@@ -17,18 +20,24 @@ const getAllBudgets = asyncHandler(async (req, res) => {
 // @Access  Private
 const getBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  // Validate the mongo ID
+  if (!validateMongodbID(id)) {
+    res.status(400);
+    throw new Error('Please enter a valid ID.');
+  }
   const budget = await Budget.findById(id);
   // Check if budget exists and the user is the owner
   if (budget && budget.user.toString() === req.user._id.toString()) {
-    const expenses = await Expense.find({ budget: budget._id });
+    const expenses = await Expense.find({ budget: budget._id }).populate(
+      'budget'
+    );
     res.status(200);
     res.json({
-      payload: { budget, expenses },
-      message: `${budget.title} git successfully.`,
+      payload: { ...budget._doc, expenses },
+      message: `'${budget.title}' got successfully.`,
     });
   } else {
-    res.status(404);
-    res.json({ message: `Budget with id: ${id} does not exist.` });
+    throw new Error(`Budget with id: ${id} does not exist.`);
   }
 });
 
@@ -36,26 +45,23 @@ const getBudget = asyncHandler(async (req, res) => {
 // @route   POST api/v1/budget
 // @Access  Private
 const createBudget = asyncHandler(async (req, res) => {
-  const { title, amount, color } = req.body;
-
+  const { title, amount } = req.body;
   // Validate the fields
-  const { error, errorsMessages } = createBudgetValidation({
+  const { error, message } = createBudgetValidation({
     title,
     amount,
-    color,
   });
   if (error) {
-    throw { message: errorsMessages };
+    throw new Error(message);
   }
   const budget = await Budget.create({
     user: req.user._id,
     title: title,
     amount: amount,
-    color: color,
   });
   res.status(201);
   res.json({
-    message: `${budget.title} budget created successfully.`,
+    message: `'${budget.title}' budget created successfully.`,
     payload: budget,
   });
 });
@@ -65,6 +71,11 @@ const createBudget = asyncHandler(async (req, res) => {
 // @Access  Private
 const updateBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  // Validate the mongo ID
+  if (!validateMongodbID(id)) {
+    res.status(400);
+    throw new Error('Please enter a valid ID.');
+  }
   const budget = await Budget.findById(id);
 
   // Check if the budget exist or not and if the user is the owner
@@ -76,14 +87,12 @@ const updateBudget = asyncHandler(async (req, res) => {
     );
     res.status(200);
     res.json({
-      message: `${budget.title} budget updated successfully.`,
+      message: `'${budget.title}' budget updated successfully.`,
       payload: budget,
     });
   } else {
     res.status(404);
-    res.json({
-      message: `Budget with id: ${id} does not exist.`,
-    });
+    throw new Error(`Budget with id: ${id} does not exist.`);
   }
 });
 
@@ -92,6 +101,12 @@ const updateBudget = asyncHandler(async (req, res) => {
 // @Access  Private
 const deleteBudget = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
+  // Validate the mongo ID
+  if (!validateMongodbID(id)) {
+    res.status(400);
+    throw new Error('Please enter a valid ID.');
+  }
   const budget = await Budget.findById(id);
 
   // Check if the budget exist or not and if the user is the owner
@@ -100,14 +115,12 @@ const deleteBudget = asyncHandler(async (req, res) => {
     const expenses = await Expense.deleteMany({ budget: id });
     res.status(200);
     res.json({
-      message: `${budget.title} budget deleted successfully.`,
+      message: `'${budget.title}' budget deleted successfully.`,
       payload: budget,
     });
   } else {
     res.status(404);
-    res.json({
-      message: `Budget with id: ${id} does not exist.`,
-    });
+    throw new Error(`Budget with id: ${id} does not exist.`);
   }
 });
 

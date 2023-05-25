@@ -1,116 +1,114 @@
 const validator = require('validator');
 
 const registerValidation = ({ email, username, password, confirmPassword }) => {
-  let error;
-  let errorsMessages = [];
+  let error = false;
+  let message = '';
 
   // Validate Email
   if (!validator.isEmail(email)) {
     error = true;
-    errorsMessages.push('Please enter a valid email.');
+    message = 'Please enter a valid email.';
+    return { error, message };
   }
 
   // Validate Username
   if (!validator.isLength(username, { min: 3, max: 30 })) {
     error = true;
-    errorsMessages.push(
-      'Username should be equal or greater than 3 charachters, and equal or less than 30 charachters.'
-    );
+    message =
+      'Username should be equal or greater than 3 charachters, and equal or less than 30 charachters.';
+    return { error, message };
   }
 
   // Validate Password
   if (!validator.isStrongPassword(password)) {
     error = true;
-    errorsMessages.push(
-      'Please enter a strong password, strong password contains at least 8 characters, 1 lowsercase, 1 uppercase, 1 number, 1 symbol.'
-    );
+    message =
+      'Please enter a strong password, strong password contains at least 8 characters, 1 lowsercase, 1 uppercase, 1 number, 1 symbol.';
+    return { error, message };
   }
 
   // Validate Password with ConfirmPassword
   if (password !== confirmPassword) {
     error = true;
-    errorsMessages.push("Password and Confirm password doesn't match.");
+    message = "Password and Confirm password doesn't match.";
+    return { error, message };
   }
-  return { error, errorsMessages };
+  return { error, message };
 };
 
 const loginValidation = ({ email, password }) => {
-  let error;
-  let errorsMessages = [];
+  let error = false;
+  let message = '';
 
   // Validate Email
   if (!validator.isEmail(email)) {
     error = true;
-    errorsMessages.push('Please enter a valid email.');
+    message = 'Please enter a valid email.';
+    return { error, message };
   }
 
   // Validate Password
   if (!validator.isStrongPassword(password)) {
     error = true;
-    errorsMessages.push(
-      'Please enter a strong password, strong password contains at least 8 characters, 1 lowsercase, 1 uppercase, 1 number, 1 symbol.'
-    );
+    message =
+      'Please enter a strong password, strong password contains at least 8 characters, 1 lowsercase, 1 uppercase, 1 number, 1 symbol.';
+    return { error, message };
   }
-  return { error, errorsMessages };
+  return { error, message };
 };
 
-const createBudgetValidation = ({ title, amount, color }) => {
-  let error;
-  let errorsMessages = [];
+const createBudgetValidation = ({ title, amount }) => {
+  let error = false;
+  let message = '';
   // Validate the fields
-  if (!color || !title || !amount) {
+  if (!title || !amount) {
     error = true;
-    errorsMessages.push('Please fill all the fields.');
+    message = 'Please fill all the fields.';
+    return { error, message };
   }
   if (!validator.isLength(title, { min: 3, max: 50 })) {
     error = true;
-    errorsMessages.push(
-      'Please enter a valid budget title, budget title should be equal or greater than 3 characters, and equal or less than 50 characters.'
-    );
-  }
-  if (
-    !color.startsWith('#') ||
-    !validator.isLength(color, { min: 7, max: 7 })
-  ) {
-    error = true;
-    errorsMessages.push(
-      'Please enter a valid color, color should be a hexcolor.'
-    );
+    message =
+      'Please enter a valid budget title, budget title should be equal or greater than 3 characters, and equal or less than 50 characters.';
+
+    return { error, message };
   }
   if (Number(amount) <= 0) {
     error = true;
-    errorsMessages.push(
-      'Please enter a valid budget amount, budget amount should be greater than zero.'
-    );
+    message =
+      'Please enter a valid budget amount, budget amount should be greater than zero.';
+    return { error, message };
   }
-  return { error, errorsMessages };
+  return { error, message };
 };
 
 const createExpenseValidation = ({ budget, title, amount }) => {
-  let error;
-  let errorsMessages = [];
+  let error = false;
+  let message = '';
   // Validate the fields
   if (!budget || !title || !amount) {
     error = true;
-    errorsMessages.push('Please fill all the fields.');
+    message = 'Please fill all the fields.';
+    return { error, message };
   }
   if (!validator.isLength(title, { min: 3, max: 50 })) {
     error = true;
-    errorsMessages.push(
-      'Please enter a valid expense title, expense title should be equal or greater than 3 characters, and equal or less than 50 characters.'
-    );
+    message =
+      'Please enter a valid expense title, expense title should be equal or greater than 3 characters, and equal or less than 50 characters.';
+    return { error, message };
   }
   if (!validateMongodbID(budget)) {
     error = true;
-    errorsMessages.push('Please enter a valid budget ID.');
+    message = 'Please enter a valid budget ID.';
+    return { error, message };
   }
   if (Number(amount) <= 0) {
     error = true;
-    errorsMessages.push(
-      'Please enter a valid expense amount, expense amount should be greater than zero.'
-    );
+    message =
+      'Please enter a valid expense amount, expense amount should be greater than zero.';
+    return { error, message };
   }
-  return { error, errorsMessages };
+  return { error, message };
 };
 
 const validateMongodbID = (id) => {
